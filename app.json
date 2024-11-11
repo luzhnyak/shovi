@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "shovi",
+    "name": "Shovi",
     "slug": "shovi",
+    "scheme": "shovi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +29,9 @@
         "projectId": "9908a5f6-206a-4147-b0ec-4e7c8dc39d6f"
       }
     },
-    "owner": "luzhnyak"
+    "owner": "luzhnyak",
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
