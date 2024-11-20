@@ -35,6 +35,11 @@ export default function App() {
             Where creativity meets innovation: embark on a journey of limitless
             exploration with Shovi.
           </Text>
+          <Text className="max-w-[320px] text-sm text-gray-100 font-pregular mt-7 text-center">
+            Where creativity meets innovation: embark on a journey of limitless
+            exploration with Shovi.
+          </Text>
+
           <CustomButton
             title="Get Started"
             handlePress={() => router.push("/sign-in")}
