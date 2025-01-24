@@ -8,8 +8,8 @@ import CustomButton from "./components/CustomButton";
 export default function App() {
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView contentContainerStyle={{ height: "100%" }}>
-        <View className="w-full justify-center items-center min-h-[80vh] px-4">
+      <ScrollView>
+        <View className="w-full justify-center items-center min-h-[85vh] px-4 my-6">
           <Image
             source={images.logo}
             className="w-[130px] h-[84px]"
@@ -22,7 +22,7 @@ export default function App() {
           />
           <View className="max-w-[320px] relative mt-5">
             <Text className="text-3xl text-white font-bold text-center">
-              Discover Endles Possibilities with{" "}
+              Discover Endles Possibilities with
               <Text className="text-secondary-200">Shovi</Text>
             </Text>
             <Image
@@ -31,10 +31,6 @@ export default function App() {
               resizeMode="contain"
             />
           </View>
-          <Text className="max-w-[320px] text-sm text-gray-100 font-pregular mt-7 text-center">
-            Where creativity meets innovation: embark on a journey of limitless
-            exploration with Shovi.
-          </Text>
           <Text className="max-w-[320px] text-sm text-gray-100 font-pregular mt-7 text-center">
             Where creativity meets innovation: embark on a journey of limitless
             exploration with Shovi.
