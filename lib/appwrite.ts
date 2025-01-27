@@ -107,3 +107,42 @@ export const getCurrentUser = async () => {
     console.log(error);
   }
 };
+
+export type Post = {
+  $id: string;
+  title: string;
+  thumbnail: string;
+  pront: string;
+  video: string;
+  creator: {
+    username: string;
+    avatar: string;
+  };
+};
+
+export const getAllPosts = async (): Promise<Post[]> => {
+  try {
+    const posts = await database.listDocuments(
+      config.databaseId,
+      config.videoCollectionId
+    );
+
+    return posts.documents as any[];
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
+
+export const getLatestPosts = async (): Promise<Post[]> => {
+  try {
+    const posts = await database.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(7)]
+    );
+
+    return posts.documents as any[];
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
