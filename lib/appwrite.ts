@@ -102,7 +102,7 @@ export const getCurrentUser = async () => {
 
     if (!currentUser || currentUser?.length === 0) throw Error;
 
-    return currentUser[0];
+    return currentUser[0] as any;
   } catch (error) {
     console.log(error);
   }
@@ -156,6 +156,29 @@ export const searchPosts = async (query: string): Promise<Post[]> => {
     );
 
     return posts.documents as any[];
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
+
+export const getUserPosts = async (userId: string): Promise<Post[]> => {
+  try {
+    const posts = await database.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+      [Query.equal("creator", userId)]
+    );
+
+    return posts.documents as any[];
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
+
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+    return session;
   } catch (error) {
     throw new Error(error?.toString());
   }
