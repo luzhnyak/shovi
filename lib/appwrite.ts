@@ -146,3 +146,17 @@ export const getLatestPosts = async (): Promise<Post[]> => {
     throw new Error(error?.toString());
   }
 };
+
+export const searchPosts = async (query: string): Promise<Post[]> => {
+  try {
+    const posts = await database.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+      [Query.search("title", query)]
+    );
+
+    return posts.documents as any[];
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};

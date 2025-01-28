@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Post } from "./appwrite";
 import { Alert } from "react-native";
 
-const useAppwrite = (fn: () => Promise<Post[]>) => {
+type FN = (query?: string) => Promise<Post[]>;
+
+const useAppwrite = (fn: FN) => {
   const [data, setData] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,6 +15,7 @@ const useAppwrite = (fn: () => Promise<Post[]>) => {
 
     try {
       const response = await fn();
+
       setData(response);
     } catch (error) {
       Alert.alert("Error", "Something went wrong");

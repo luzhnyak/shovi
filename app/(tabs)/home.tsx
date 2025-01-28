@@ -1,11 +1,4 @@
-import {
-  View,
-  FlatList,
-  Text,
-  Image,
-  RefreshControl,
-  Alert,
-} from "react-native";
+import { View, FlatList, Text, Image, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -16,10 +9,6 @@ import EmptyState from "../components/EmptyState";
 import { getAllPosts, getLatestPosts, Post } from "../../lib/appwrite";
 import useAppwrite from "../../lib/useAppwrite";
 import VideoCard from "../components/VideoCard";
-
-type DataItem = {
-  id: number;
-};
 
 const Home = () => {
   const { data: posts, refetch } = useAppwrite(getAllPosts);
