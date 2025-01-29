@@ -5,16 +5,19 @@ import {
   Avatars,
   Databases,
   Query,
+  Storage,
+  ImageGravity,
 } from "react-native-appwrite";
+import { Form } from "../app/(tabs)/create";
 
 export const config = {
   endpoint: "https://cloud.appwrite.io/v1",
   platform: "com.luzhnyak.shovi",
-  projectId: "6794bdde000d49094432",
-  databaseId: "6794c1340018f73e1ad7",
-  userCollectionId: "6794c17600026903e010",
-  videoCollectionId: "6794c1c7003661a386c2",
-  storageId: "6794c38f002536d71f39",
+  projectId: "6799ed07001c6d83e9d9",
+  databaseId: "6799ed1c002c03132919",
+  userCollectionId: "6799ed88003c38daf487",
+  videoCollectionId: "6799ed9e0018d55eb7b6",
+  storageId: "6799edbc002e005bd591",
 };
 
 // Init your React Native SDK
@@ -28,6 +31,7 @@ client
 const account = new Account(client);
 const avatars = new Avatars(client);
 const database = new Databases(client);
+const storage = new Storage(client);
 
 export const createUser = async (
   email: string,
@@ -124,7 +128,8 @@ export const getAllPosts = async (): Promise<Post[]> => {
   try {
     const posts = await database.listDocuments(
       config.databaseId,
-      config.videoCollectionId
+      config.videoCollectionId,
+      [Query.orderDesc("$createdAt")]
     );
 
     return posts.documents as any[];
@@ -138,7 +143,7 @@ export const getLatestPosts = async (): Promise<Post[]> => {
     const posts = await database.listDocuments(
       config.databaseId,
       config.videoCollectionId,
-      [Query.orderDesc("$createdAt"), Query.limit(7)]
+      [Query.orderDesc("$createdAt")]
     );
 
     return posts.documents as any[];
@@ -179,6 +184,97 @@ export const signOut = async () => {
   try {
     const session = await account.deleteSession("current");
     return session;
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
+
+export const getFilePreview = async (
+  fileId: string,
+  type: "video" | "image"
+) => {
+  let fileUrl: string | null = null;
+
+  try {
+    if (type === "video") {
+      fileUrl = storage.getFileView(config.storageId, fileId).toString();
+    } else if (type === "image") {
+      fileUrl = storage
+        .getFilePreview(
+          config.storageId,
+          fileId,
+          2000,
+          2000,
+          ImageGravity.Top,
+          100
+        )
+        .toString();
+    } else {
+      throw new Error("Invalid file type");
+    }
+
+    if (!fileUrl) {
+      throw new Error("File preview failed");
+    }
+
+    return fileUrl;
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
+
+export const uploadFile = async (file: any, type: "video" | "image") => {
+  if (!file) return;
+
+  const asset = {
+    name: file.fileName,
+    type: file.mimeType,
+    size: file.fileSize,
+    uri: file.uri,
+  };
+
+  try {
+    const fileId = ID.unique();
+
+    const uploadedFile = await storage.createFile(
+      config.storageId,
+      fileId,
+      asset
+    );
+
+    if (!uploadedFile) {
+      throw new Error("File upload failed");
+    }
+
+    const fileUrl = await getFilePreview(uploadedFile.$id, type);
+
+    return fileUrl;
+  } catch (error) {
+    throw new Error(error?.toString());
+  }
+};
+
+export const createVideo = async (form: Form) => {
+  try {
+    const [videoUrl, thumbnailUrl] = await Promise.all([
+      uploadFile(form.video, "video"),
+      uploadFile(form.thumbnail, "image"),
+    ]);
+
+    const newPost = await database.createDocument(
+      config.databaseId,
+      config.videoCollectionId,
+      ID.unique(),
+      {
+        title: form.title,
+        thumbnail: thumbnailUrl,
+        promt: form.promt,
+        video: videoUrl,
+        creator: form.userId,
+      }
+    );
+
+    return newPost;
   } catch (error) {
     throw new Error(error?.toString());
   }

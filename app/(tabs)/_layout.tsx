@@ -15,7 +15,7 @@ const TabIcon = ({
   focused: boolean;
 }) => {
   return (
-    <View className="w-36 h-36 items-center justify-center gap-2">
+    <View className="w-36 h-36 items-center justify-center gap-2 mt-10">
       <Image
         source={icon}
         resizeMode="contain"
@@ -42,7 +42,7 @@ const TabsLayout = () => {
         tabBarStyle: {
           backgroundColor: "#161622",
           borderTopWidth: 1,
-          borderTopColor: "#232533",
+          borderColor: "#232533",
           height: 84,
         },
       }}
